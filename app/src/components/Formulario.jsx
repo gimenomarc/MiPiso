@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import CampoFormulario from './CampoFormulario';
+import { database } from '../firebase/firebase'; // Asegúrate de que estés importando la referencia a la base de datos de Firebase
 
 const Formulario = () => {
   const [datos, setDatos] = useState({
+    nombrePiso: '',
     cuotaComunidad: '',
     derramaPrevista: '',
     itePasada: '',
@@ -25,13 +27,54 @@ const Formulario = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Datos del formulario:', datos);
-  };
 
+    // Crea un objeto con los datos del piso
+    const nuevoPiso = {
+      nombrePiso: datos.nombrePiso,
+      cuotaComunidad: datos.cuotaComunidad,
+      derramaPrevista: datos.derramaPrevista,
+      itePasada: datos.itePasada,
+      comisionInmo: datos.comisionInmo,
+      disponibilidadPosesion: datos.disponibilidadPosesion,
+      observaciones: datos.observaciones,
+      propietario: datos.propietario,
+      herencia: datos.herencia,
+      viviendaHabitual: datos.viviendaHabitual,
+      compraOtraVivienda: datos.compraOtraVivienda,
+      mayoresDe65: datos.mayoresDe65,
+      metrosCuadrados: datos.metrosCuadrados,
+      anoConstruccion: datos.anoConstruccion,
+      certificadoEnergetico: datos.certificadoEnergetico,
+    };
+
+    // Guarda los datos en Firebase
+    database.ref('pisos').push(nuevoPiso);
+
+    // Limpia el formulario o realiza cualquier otra acción necesaria
+    setDatos({
+      nombrePiso: '',
+      cuotaComunidad: '',
+      derramaPrevista: '',
+      itePasada: '',
+      comisionInmo: '',
+      disponibilidadPosesion: '',
+      observaciones: '',
+      propietario: '',
+      herencia: '',
+      viviendaHabitual: '',
+      compraOtraVivienda: '',
+      mayoresDe65: '',
+      metrosCuadrados: '',
+      anoConstruccion: '',
+      certificadoEnergetico: '',
+    });
+  };
+  
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-xl mx-auto mt-8">
-      <h2 className="text-2xl font-semibold mb-4 text-gray-800">Agregar un Nuevo Piso</h2>
+      <h2 className="text-2xl font-semibold mb-4 text-gray-800">Nuevo Piso</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
+        <CampoFormulario label="Nombre del Piso" value={datos.nombrePiso} onChange={(e) => handleCampoChange('nombrePiso', e.target.value)} />
         <CampoFormulario label="Cuota de Comunidad" value={datos.cuotaComunidad} onChange={(e) => handleCampoChange('cuotaComunidad', e.target.value)} />
         <CampoFormulario label="Derrama Prevista" value={datos.derramaPrevista} onChange={(e) => handleCampoChange('derramaPrevista', e.target.value)} />
         <CampoFormulario label="ITE Pasada" value={datos.itePasada} onChange={(e) => handleCampoChange('itePasada', e.target.value)} />
